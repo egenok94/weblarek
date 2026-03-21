@@ -2,8 +2,8 @@ import { IProduct } from "../../types";
 
 
 export class Products{
-        products: IProduct[];
-        selectedproduct: string | null;
+        private products: IProduct[];
+        private selectedproduct: IProduct | null;
 
     constructor() {
         this.products = new Array<IProduct>();
@@ -19,7 +19,7 @@ export class Products{
         return this.products;
     }
 
-    getItemById(id: string): IProduct {
+    getItemById(id: string): IProduct | undefined {
         return this.products.find(item => item.id === id)
     }
 
@@ -27,7 +27,7 @@ export class Products{
         this.selectedproduct = this.getItemById(id);
     }
 
-    getDetailCard (): IProduct {
+    getDetailCard (): IProduct | null {
         return this.selectedproduct;
     }
 

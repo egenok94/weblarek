@@ -1,11 +1,11 @@
 import { IBuyer } from "../../types";
 import { TPayment } from "../../types";
 
-export class Buyer implements IBuyer {
-    payment: TPayment;
-    email: string;
-    phone: string;
-    address: string;
+export class Buyer{
+    private payment: TPayment;
+    private email: string;
+    private phone: string;
+    private address: string;
 
     constructor() {
         this.payment = "";
@@ -41,28 +41,28 @@ export class Buyer implements IBuyer {
         this.email = "";
     }
 
-    checkValidation(buyer: IBuyer): Object {
-        let result = {
-            paymentError: "",
-            addressError: "",
-            emailError: "",
-            phoneError: ""
+    checkValidation(): Partial<Record<keyof IBuyer, string>> {
+        const result = {
+            payment: "",
+            address: "",
+            email: "",
+            phone: ""
         }
 
-        if (buyer.payment === "") {
-            result.paymentError = "Не выбран способ оплаты";
+        if (this.payment === "") {
+            result.payment = "Не выбран способ оплаты";
         }
         
-        if (buyer.address === "") {
-            result.addressError = "Необходимо указать адрес";
+        if (this.address === "") {
+            result.address = "Необходимо указать адрес";
         }
 
-        if (buyer.email === "") {
-            result.emailError = "Необходимо указать email";
+        if (this.email === "") {
+            result.email = "Необходимо указать email";
         }
         
-        if (buyer.phone === "") {
-            result.phoneError = "Необходимо указать номер телефона";
+        if (this.phone === "") {
+            result.phone = "Необходимо указать номер телефона";
         }
 
         return result;

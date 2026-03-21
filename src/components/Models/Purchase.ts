@@ -1,7 +1,7 @@
 import { IProduct } from "../../types";
 
 export class Purchase{
-    products: IProduct[];
+    private products: IProduct[];
 
     constructor(){
         this.products = new Array<IProduct>();
