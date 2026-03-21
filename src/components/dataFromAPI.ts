@@ -1,19 +1,19 @@
 import { IApi } from "../types";
 
 
-export class dataFromAPI {
-    api: IApi
+export class DataFromAPI {
+    private api: IApi
 
     constructor(api: IApi) {
         this.api = api;
     }
 
-    async getApiProducts<T extends object>(uri: string): Promise<T> {
-        return this.api.get(uri);
+    async getApiProducts<T extends object>(): Promise<T> {
+        return await this.api.get("/product/");
     }
 
-    async sendData<T extends object>(uri: string, data: object): Promise<T>{
-        return this.api.post(uri, data);
+    async sendData<T extends object>(data: object): Promise<T>{
+        return await this.api.post("/order/", data);
     }
 
 }

@@ -5,7 +5,7 @@ import { Products } from './components/Models/Products';
 import { apiProducts } from './utils/data';
 import { Buyer } from './components/Models/Buyer';
 import { Purchase } from './components/Models/Purchase';
-import { dataFromAPI } from './components/dataFromAPI';
+import { DataFromAPI } from './components/dataFromAPI';
 
 /* Model for Products */
 console.log("---------------Model for Products---------------");
@@ -94,11 +94,11 @@ console.log("clearPurchase: ", purchaseModel.getProducts());
 console.log("---------------get data form Server---------------");
 
 const ApiInstance = new Api(API_URL);
-const dataFromServer = new dataFromAPI(ApiInstance);
+const dataFromServer = new DataFromAPI(ApiInstance);
 
-console.log(await dataFromServer.getApiProducts("/product/"));
+console.log(await dataFromServer.getApiProducts());
 
-const allData = await dataFromServer.getApiProducts("/product/")
+const allData = await dataFromServer.getApiProducts();
 productsModel.setItems(allData.items);
 
 console.log("dataFromServer: ", productsModel.getItems());
