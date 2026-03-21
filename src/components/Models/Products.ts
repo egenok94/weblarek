@@ -24,7 +24,7 @@ export class Products{
     }
 
     setItem(id: string): void {
-        this.selectedproduct = this.getItemById(id);
+        this.selectedproduct = this.getItemById(id) ?? null;
     }
 
     getDetailCard (): IProduct | null {
