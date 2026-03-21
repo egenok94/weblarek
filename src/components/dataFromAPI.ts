@@ -9,11 +9,11 @@ export class DataFromAPI {
     }
 
     async getApiProducts<T extends object>(): Promise<T> {
-        return await this.api.get("/product/");
+        return this.api.get("/product/");
     }
 
     async sendData<T extends object>(data: object): Promise<T>{
-        return await this.api.post("/order/", data);
+        return this.api.post("/order/", data);
     }
 
 }

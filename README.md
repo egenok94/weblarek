@@ -107,20 +107,15 @@ Presenter - презентер содержит основную логику п
 
 Поля класса: 
 `products: IProduct[]` - хранит в себе все продукты, полученные с сервера
-
 `selectedproduct: string | null;` - хранит в себе элемент, выбранный пользователем для просмотра
 
 Методы класса:
 
 `setItems(items: IProduct[]): void` - сохраняет элементы, полученные с сервера в поле products.
-
 `getItems(): IProduct[]` - возвращает все элементы, хранящиеся в поле products.
-
-`getItemById(id: string): IProduct` - возвращает элемент, на основе переданного в него ID из массива products.
-
+`getItemById(id: string): IProduct | undefined` - возвращает элемент, на основе переданного в него ID из массива products.
 `setItem(id: string): void` - записывает элемент в поле sectedproduct, на основе переданного в него ID
-
-`getDetailCard (): IProduct` - отдаёт элемент из sectedproduct для подробного отображения.
+`getDetailCard (): IProduct | null` - отдаёт элемент из sectedproduct для подробного отображения.
 
 #### Класс Buyer
 реализует логику заполнения данных покупателем.
@@ -140,7 +135,7 @@ Presenter - презентер содержит основную логику п
 `setEmail(email: string): void` - записывает указанный email в поле email
 `getBuyer(): void` - получение данных о продавце
 `clearBuyer(): void` - очищение данных о продавце
-`checkValidation(buyer: IBuyer): Object` - проверка валидности введённых данных
+`checkValidation(): Partial<Record<keyof IBuyer, string>>` - проверка валидности введённых данных
 
 #### Класс Purchase
 реализует логику корзины
@@ -169,5 +164,5 @@ Presenter - презентер содержит основную логику п
 `api: IApi` - экземпляр класса API
 
 Методы класса:
-`async getApiProducts<T extends object>(uri: string): Promise<T>` - метод получения данных из API посредством вызова метода get класса Api, в параметр принимает дополнение базовой url для получения данных из API
-`async sendData<T extends object>(uri: string, data: object): Promise<T>` - метод отправки данных на сервер посредством вызова метода post из класса Api, в параметр принимает дополнение базовой url для отправки данных на сервер и сами данные.
+`async getApiProducts<T extends object>(): Promise<T>` - метод получения данных из API посредством вызова метода get класса Api, в параметр принимает дополнение базовой url для получения данных из API
+`async sendData<T extends object>(data: object): Promise<T>` - метод отправки данных на сервер посредством вызова метода post из класса Api, в параметр принимает дополнение базовой url для отправки данных на сервер и сами данные.
