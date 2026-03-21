@@ -16,7 +16,8 @@ export class Purchase{
     }
 
     deleteProduct(product: IProduct): void {
-        let index = this.products.indexOf(product);
+        let index = this.products.findIndex(item => item.id === product.id);
+        console.log("index:", index);
 
         if(index !== -1) {
             this.products.splice(index, 1);
@@ -28,13 +29,14 @@ export class Purchase{
     }
 
     getCost(): number {
-        let result = 0;
-        this.products.forEach(item => {
+        const priceSum = this.products.reduce((sum, item) => {
             if(item.price !== null){
-                result += item.price;
+                sum += item.price;
             }
-        })
-        return result; 
+            return sum;
+        },0);
+
+        return priceSum;
     }
 
     getCount(): number {
@@ -42,10 +44,9 @@ export class Purchase{
     }
 
     checkProduct(id: string): boolean {
-        if (this.products.find(item => item.id === id)){
-            return true;
-        } else {
-            return false;
-        }
+         return this.products.some((item) => {
+            return item.id == id;
+    });
+        
     }
 }

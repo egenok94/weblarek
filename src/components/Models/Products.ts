@@ -11,6 +11,7 @@ export class Products{
         }
 
     setItems(items: IProduct[]): void {
+        this.products = [];
         items.forEach(item => this.products.push(item))
     }
 

@@ -8,6 +8,7 @@ import { Purchase } from './components/Models/Purchase';
 import { dataFromAPI } from './components/dataFromAPI';
 
 /* Model for Products */
+console.log("---------------Model for Products---------------");
 const productsModel = new Products();
 productsModel.setItems(apiProducts.items);
 
@@ -27,6 +28,7 @@ console.log("getDetailCard: ", productsModel.getDetailCard());
 
 
 /* Model for Buyer */
+console.log("---------------Model for Buyer---------------");
 const buyerModel = new Buyer();
 
 console.log("getBuyer: ", buyerModel.getBuyer());
@@ -64,6 +66,7 @@ console.log("clearBuyer: ", buyerModel.getBuyer());
 
 
 /*Model for Purchase */
+console.log("---------------Model for Purchase---------------");
 
 const purchaseModel = new Purchase();
 
@@ -88,6 +91,7 @@ console.log("clearPurchase: ", purchaseModel.getProducts());
 
 
 /*get data form Server */
+console.log("---------------get data form Server---------------");
 
 const ApiInstance = new Api(API_URL);
 const dataFromServer = new dataFromAPI(ApiInstance);
