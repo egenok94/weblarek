@@ -1,5 +1,4 @@
-import { IApi } from "../types";
-
+import { IApi, IOrder, IOrderResponse, IProductResponse } from "../types";
 
 export class DataFromAPI {
     private api: IApi
@@ -8,12 +7,11 @@ export class DataFromAPI {
         this.api = api;
     }
 
-    async getApiProducts<T extends object>(): Promise<T> {
-        return this.api.get("/product/");
+    async getApiProducts(): Promise<IProductResponse> {
+        return this.api.get<IProductResponse>("/product/");
     }
 
-    async sendData<T extends object>(data: object): Promise<T>{
-        return this.api.post("/order/", data);
+    async sendData(data: IOrder): Promise<IOrderResponse>{
+        return this.api.post<IOrderResponse>("/order/", data);
     }
-
 }

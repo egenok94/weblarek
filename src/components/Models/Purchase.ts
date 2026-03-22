@@ -16,8 +16,7 @@ export class Purchase{
     }
 
     deleteProduct(product: IProduct): void {
-        let index = this.products.findIndex(item => item.id === product.id);
-        console.log("index:", index);
+        const index = this.products.findIndex(item => item.id === product.id);
 
         if(index !== -1) {
             this.products.splice(index, 1);
