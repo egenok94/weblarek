@@ -1,3 +1,6 @@
+import { TCategoryKey } from "../types";
+import { categoryMap, CDN_URL } from "./constants";
+
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 }
@@ -134,5 +137,17 @@ export function createElement<
             element.append(child);
         }
     }
+    return element;
+}
+
+export function getImage (url: string): string {
+    return CDN_URL + url;
+}
+
+export function getCalss (element: HTMLSpanElement, category: string) {
+    const key= category as keyof typeof categoryMap;
+    const lastClass = element.classList[element.classList.length - 1];
+    element.classList.replace(lastClass, categoryMap[key])
+    
     return element;
 }
