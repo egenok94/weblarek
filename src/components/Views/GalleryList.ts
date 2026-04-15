@@ -6,10 +6,10 @@ interface IGalleryList {
 }
 
 export class GalleryList extends Component<IGalleryList> {
-    protected gallery: HTMLElement;
+    protected gallery: HTMLUListElement;
 
     constructor(nameContainer: string) {
-            const container = ensureElement<HTMLElement>(nameContainer);
+            const container = ensureElement<HTMLUListElement>(nameContainer);
             super(container);
 
             this.gallery = container;

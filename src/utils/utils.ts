@@ -1,4 +1,3 @@
-import { TCategoryKey } from "../types";
 import { categoryMap, CDN_URL } from "./constants";
 
 export function pascalToKebab(value: string): string {

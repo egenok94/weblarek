@@ -166,3 +166,216 @@ Presenter - презентер содержит основную логику п
 Методы класса:
 `async getApiProducts<T extends object>(): Promise<T>` - метод получения данных из API посредством вызова метода get класса Api, в параметр принимает дополнение базовой url для получения данных из API
 `async sendData<T extends object>(data: object): Promise<T>` - метод отправки данных на сервер посредством вызова метода post из класса Api, в параметр принимает дополнение базовой url для отправки данных на сервер и сами данные.
+
+### Views
+
+#### Header
+Является представлением для кнопки корзины в шапке и счетчка товаров в корзине
+
+Конструктор:
+`rootcontainer: string` - класс шапки
+`protected events: IEvents` - брокер событий
+
+Поля класса:
+`counterElement: HTMLElement` - содержит в себе элемент счётчика товаров, добавленных в корзину
+`basketButton: HTMLButtonElement` - содержит в себе кнопку корзины в шапке сайта
+
+Методы класса: 
+`set counter(value: number)` - метод обновления счетчика количества товаров в корзине
+
+#### GalleryList
+Является представлением списка товаров (ul) на главной странице
+
+Конструктор:
+`nameContainer: string` - класс списка
+
+Поля класса: 
+`gallery: HTMLUListElement` - содержит в себе ul списка 
+
+Методы класса:
+`set catalog(items: HTMLElement[]) ` - метод добавления карточек товара в список
+
+#### GalleryCard
+Является представлением карточки товара в на главной странице
+
+Конструктор:
+`rootcontainer: HTMLButtonElement` - клон темплейта
+`protected events: IEvents` - брокер событий
+`item: IProduct` - элемент для отображения
+
+Поля класса:
+`element: HTMLButtonElement` - содержит в себе сам элемент карточки
+`imageElement: HTMLImageElement` - сожержит в себе элемент картинки
+`titleElement: HTMLHeadingElement` - содержит в себе элемент заголовка
+`cardCategoryElement: HTMLSpanElement` - содержит в себе элемент категории
+`priceElement: HTMLSpanElement` - содержит в себе элемент цены
+
+Методы класса:
+`render(item: IProduct)` - возвращает готовую карточку
+
+#### Modal
+Является представление модального окна
+
+Конструктор:
+`rootcontainer: string` - класс модального окна
+`events: IEvents` - брокер событий
+
+Поля класса: 
+`contentElement: HTMLDivElement` - элемент содержимого модального окна
+`closeButton: HTMLButtonElement` - элемент кнопки закрытия модельного окна
+
+Методы класса:
+`set content(element: HTMLElement)` - установка содержимого модального окна
+`openModal()` - открытие модального окна
+`closeModal()` - закрытие модального окна
+
+#### CardPreview
+Является представлением выбранной карточки для детального отображения
+
+Конструктор:
+`rootcontainer: HTMLDivElement` - клон темплейта для карточки детального просмотра
+`inBusket: boolean` - наличие товара в корзине
+`protected events: IEvents` - брокер событий
+
+Поля класса:
+`element: HTMLDivElement` содержит в себе сам элемент карточки 
+`imageElement: HTMLImageElement` - содержит в себе элемент картинка
+`categoryElement: HTMLSpanElement` - содержит в себе элемент категории
+`titleElement: HTMLHeadElement` - содержит в себе элемент заголока
+`descElement: HTMLParagraphElement` - содержит в себе элемент описания
+`buttonElement: HTMLButtonElement` - сожержит в себе элемент кнопки (Купить)
+`priceElement: HTMLSpanElement` - содержит в себе ээлемент цены
+`hasInBusket : boolean` - отображает ниличие или отсутствие товара в корзине
+
+Методы класса:
+`render(item: IProduct)` - метод получения готовой карточки для детального отображения
+`updateButton(hasInBusket: boolean)` - метод обновления кнопки покупки
+
+#### BuskaetModal
+Является представлением для отображения содержимого модального окна корзины (список товаров в корзине описан в классе BusketListItem)
+
+Конструктор:
+`rootcontainer: HTMLDivElement` - клон темплейта для корзины
+`events: IEvents` - брокер событий
+
+Поля Класса:
+`listElement: HTMLUListElement` - элемент списка товаров 
+`buttonElement: HTMLButtonElement` - элемент кнопки для оформления заказа
+`priceElement: HTMLSpanElement` - элемент общей стоимости товаров в корзине
+`element: HTMLDivElement` - сам элемент корзины для модального окна
+
+Методы Класса:
+`render()` - метод получения готового элемента корзины для отображения в модальном окне
+`set content(element: HTMLLIElement)` - добавление товаров в корзину
+`setCost(allPrice: number)` - установка общей стоимости товаров в корзине
+`clearBusket()` - очищение элементов товаров в коризне
+
+#### BusketListItem
+Является представлением товара в корзине
+
+Конструктор:
+`rootcontainer: HTMLLIElement` - клон темплейта элемента товара в корзине
+`events: IEvents` - брокер событий
+`item: IProduct` - элемент для отображения
+`index: number` - индекс элемента для номера в корзине
+
+Поля класса:
+`element: HTMLLIElement` - сам элемент товара
+`counter: string` - очерёдность товара в корзине
+`indexElement: HTMLSpanElement` - элемент очерёдности товара в корзине
+`titleElement: HTMLSpanElement` - элемент заголовка
+`priceElement: HTMLSpanElement` - элемент цены
+`buttonElement: HTMLButtonElement` - элемент кнопки удаления из корщины
+
+Методы класса:
+`render(item: IProduct)` - метод получения готового элемента для добавления в DOM в корзину в модальном окне
+
+#### Form
+Общее представление для форм в модальном окне
+
+Конструктор:
+`events: IEvents` - брокер событий
+`formcontainer: HTMLFormElement` - клон темплейта формы
+
+Поля класса:
+`form: HTMLFormElement` - сам лемент формы
+`errorElement: HTMLSpanElement` - элемент для отображения ошибок
+`nextButton?: HTMLButtonElement | null = null` - элемент кнопки "Далее"
+
+Методы класса:
+`initList()` - инициализируем все слушатели событий
+`ensureButton()` - для переопределения кнопки в форме
+`validateFirst(data: Partial<Record<keyof IBuyer, string>>)` - валидация первой формы
+`validateSecond(data: Partial<Record<keyof IBuyer, string>>)` - валидация второй формы
+
+
+#### OrderForm
+Представление формы для выбора типа оплаты и ввода адреса
+
+Конструктор:
+`events: IEvents` - брокер событий
+
+Поля класса:
+`element: HTMLFormElement` - элемент формы
+
+Методы класса:
+`render()` - метод для получения полного ээлемента формы
+
+#### ContactsForm
+Представление формы для ввода телефона и почты
+
+Конструктор:
+`events: IEvents` - брокер событий
+
+Поля класса:
+`element: HTMLFormElement` - элемент формы
+
+Методы класса:
+`render()` - метод для получения полного ээлемента формы
+
+#### Success
+Представление для отобржения успешного оформления заказа
+
+Конструктор:
+`rootcontainer: HTMLDivElement` - клон шаблона модального окна успешного оформления заказа
+`events: IEvents` - брокер событий
+`allPrice: number` - полная цена купленных товаров
+
+Поля класса:
+`element: HTMLDivElement` - сам эелемент успешного оформления заказа 
+`descElement: HTMLParagraphElement` - элемент указанаия списанной цены
+`buttonElement: HTMLButtonElement` - элемент кнопки "За новыми покупками"
+`price: string` - полная цена списания
+
+Методы класса:
+`render()` - метод получения готового элемента для отображения
+`setCost(price: number)` - установка указания списанной цены
+
+
+### Presenter
+#### Presenter
+Является презентером приложения
+
+Конструктор класса не принимает параметров
+
+Обрабатываемые события:
+`catalog:change` - вызывается при изменении колчества товаров в модели данный Products, отрисовывает карточки в каталоге на главной странице 
+`card:open` - отрисовка открытия выбранной карточки товара в каталоге
+`card:selected` - изменение модального окна для отображения выбранной карточки
+`modal:open` - отрисовка открытия модального окна
+`modal:close` - отрисовка закрытия модального окна
+`basket:open` - отрисовка открытия корзины товаров в модальном окне
+`card:tobusket` - отрисовка добавления товара в корзину
+`card:delete-from-busket` - отрисовка удаления товара из корзины по клику кнопки удаления в открытой в модальном окне корзины
+`card:delete-from-preview` - отрисовка удаления товара из корзины по клику кнопки удаления в открытой в модальном окне детального просмотра карточки
+`busket:change` - отрисовка изменения колчества товаров в корзине
+`modal:firstform` - отрисовка перехода к первоой форме оформления заказа
+`buyer:change` - установка введённых занчений в модель данных Buyer
+`buyer:setValueFirst` - проверка введённых занчений в первой форме и отрисовка ошибок
+`buyer:setValueSecond` - проверка введённых значений во второй форме и отрисовка ошибок
+`modal:secondform` - отрисовка перехода ко второй форме оформления заказа
+`modal:success` - отрисовка отображения успешного оформления заказа
+
+Методы класса:
+`async loadData()` - загрузка каталога данными из API
+`initialization()` - инициализация приложения

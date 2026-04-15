@@ -1,12 +1,12 @@
 import { IProduct } from "../../types";
-import { EventEmitter } from "../base/Events";
+import { IEvents } from "../base/Events";
 
 
 export class Products{
         private products: IProduct[];
         private selectedproduct: IProduct | null;
 
-    constructor(protected events: EventEmitter) {
+    constructor(protected events: IEvents) {
         this.products = new Array<IProduct>();
         this.selectedproduct = null;
         }
@@ -27,10 +27,12 @@ export class Products{
 
     setItem(id: string): void {
         this.selectedproduct = this.getItemById(id) ?? null;
+        this.events.emit("card:selected");
     }
 
     getDetailCard (): IProduct | null {
         return this.selectedproduct;
+        
     }
 
 }

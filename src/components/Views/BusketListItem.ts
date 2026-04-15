@@ -11,7 +11,7 @@ export class BusketListItem extends Component<HTMLLIElement>{
     protected element: HTMLLIElement;
     protected counter: string;
 
-    constructor(rootcontainer: HTMLLIElement, /*protected events: IEvents*/item: IProduct, index: number) {
+    constructor(rootcontainer: HTMLLIElement, protected events: IEvents, item: IProduct, index: number) {
         super(rootcontainer);
         this.element = rootcontainer;
         this.counter = index.toString();
@@ -20,11 +20,8 @@ export class BusketListItem extends Component<HTMLLIElement>{
         this.priceElement = ensureElement<HTMLSpanElement>('.card__price', this.element);
         this.buttonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.element);
         this.buttonElement.addEventListener('click', () => {
-            console.log("click on delete button",  item.id);
-            // this.events.emit('card:select');
+            this.events.emit('card:delete-from-busket', item);
         });
-
-        this.render(item);
     }
 
     render(item: IProduct) {

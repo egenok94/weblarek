@@ -11,7 +11,7 @@ export class Header extends Component<IHeader> {
     protected counterElement: HTMLElement;
     protected basketButton: HTMLButtonElement;
 
-    constructor(protected events: IEvents, rootcontainer: HTMLElement) {
+    constructor(rootcontainer: string, protected events: IEvents) {
         const container = ensureElement(rootcontainer);
         super(container);
 

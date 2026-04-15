@@ -2,15 +2,15 @@ import { cloneTemplate, ensureElement } from "../../utils/utils";
 import { IEvents } from "../base/Events";
 import { Form } from "./Form";
 
-export class OrderForm extends Form {
+export class ContactsForm extends Form {
     protected element: HTMLFormElement;
     
 
     constructor(protected events: IEvents) {
-        const orderForm = cloneTemplate<HTMLFormElement>("#order");
+        const orderForm = cloneTemplate<HTMLFormElement>("#contacts");
         super(events, orderForm);
         this.element = orderForm;
-        this.nextButton = ensureElement<HTMLButtonElement>("[name='order'] .button.order__button", this.element);
+        this.nextButton = ensureElement<HTMLButtonElement>("[name='contacts'] .button", this.element);
     }
 
     render() {

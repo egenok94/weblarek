@@ -1,10 +1,13 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Purchase{
     private products: IProduct[];
+    protected events: IEvents;
 
-    constructor(){
+    constructor(events: IEvents){
         this.products = new Array<IProduct>();
+        this.events = events;
     }
 
     getProducts(): IProduct[] {
@@ -13,6 +16,7 @@ export class Purchase{
 
     addProduct(product: IProduct): void {
         this.products.push(product);
+        this.events.emit("busket:change");
     }
 
     deleteProduct(product: IProduct): void {
@@ -21,10 +25,13 @@ export class Purchase{
         if(index !== -1) {
             this.products.splice(index, 1);
         }
+
+        this.events.emit("busket:change");
     }
 
     clearPurchase(): void {
         this.products = [];
+        this.events.emit("busket:change");
     }
 
     getCost(): number {
