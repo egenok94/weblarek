@@ -14,6 +14,9 @@ export class CardPreview extends CardMoreDetail{
         this.element = rootcontainer;
         this.descElement = ensureElement<HTMLParagraphElement>(".card__text", this.element);
         this.buttonElement = ensureElement<HTMLButtonElement>(".button", this.element);
+        this.buttonElement.onclick = () => {
+            this.events.emit("cardPreview: action")
+        }
     }
 
     render(item: IProduct) {
@@ -29,15 +32,8 @@ export class CardPreview extends CardMoreDetail{
     updateButton(hasInBusket: boolean) {
         if (hasInBusket) {
             this.buttonElement.textContent = "Удалить из корзины";
-            this.buttonElement.onclick = () => {
-                this.events.emit("card:delete-from-preview");
-            }
         } else {
-
             this.buttonElement.textContent = (this.priceElement.textContent === "Бесценно") ? "Недоступно" : "Купить";
-            this.buttonElement.onclick = () => {
-                this.events.emit("card:tobusket");
-            }
         }
     }
 }

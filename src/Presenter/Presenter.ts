@@ -98,17 +98,17 @@ export class Presenter {
             this.modal.content = this.busketModal.render();
         });
 
-        this.events.on("card:tobusket", () => {
-            this.purchaseModel.addProduct(this.productsModel.getDetailCard()!);
-        } );
+        this.events.on("cardPreview: action", () => {
+            const detailCard= this.productsModel.getDetailCard()
+            if (this.purchaseModel.checkProduct(detailCard!.id)) {
+                this.purchaseModel.deleteProduct(detailCard!);
+            } else{
+                this.purchaseModel.addProduct(detailCard!);
+            }
+        })
 
         this.events.on("card:delete-from-busket", (item:IProduct) => {
             this.purchaseModel.deleteProduct(item);
-        })
-
-        this.events.on("card:delete-from-preview", () => {
-            this.purchaseModel.deleteProduct(this.productsModel.getDetailCard()!);
-            
         })
 
         this.events.on("busket:change", () => {
