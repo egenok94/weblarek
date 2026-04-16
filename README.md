@@ -195,6 +195,34 @@ Presenter - презентер содержит основную логику п
 Методы класса:
 `set catalog(items: HTMLElement[]) ` - метод добавления карточек товара в список
 
+#### CardAll 
+явялется базовым классом для всех элементов отображающих информацию о товаре (карточек товаров)
+
+Конструктор:
+`rootcontainer: HTMLElement`  - клон темплейта
+
+Поля класса:
+`element: HTMLElement` - содержит в себе сам элемент
+`titleElement: HTMLElement` - содержит в себе элемент заголовока
+`priceElement: HTMLSpanElement` - содержит в себе элемент цены
+
+Методы класса:
+отсутствуют
+
+#### CardMoreDetail
+Явяляется базовым классом для отображения более детальный карточек товара
+
+Конструктор:
+`rootcontainer: HTMLElement`  - клон темплейта
+
+Поля класса:
+`element: HTMLElement` - содержит в себе сам элемент
+`imageElement: HTMLImageElement` - содержит в себе элемент картинки
+`categoryElement: HTMLSpanElement` - содержит в себе элемент категории товара
+
+Методы класса:
+отсутствуют
+
 #### GalleryCard
 Является представлением карточки товара в на главной странице
 
@@ -205,10 +233,6 @@ Presenter - презентер содержит основную логику п
 
 Поля класса:
 `element: HTMLButtonElement` - содержит в себе сам элемент карточки
-`imageElement: HTMLImageElement` - сожержит в себе элемент картинки
-`titleElement: HTMLHeadingElement` - содержит в себе элемент заголовка
-`cardCategoryElement: HTMLSpanElement` - содержит в себе элемент категории
-`priceElement: HTMLSpanElement` - содержит в себе элемент цены
 
 Методы класса:
 `render(item: IProduct)` - возвращает готовую карточку
@@ -239,12 +263,8 @@ Presenter - презентер содержит основную логику п
 
 Поля класса:
 `element: HTMLDivElement` содержит в себе сам элемент карточки 
-`imageElement: HTMLImageElement` - содержит в себе элемент картинка
-`categoryElement: HTMLSpanElement` - содержит в себе элемент категории
-`titleElement: HTMLHeadElement` - содержит в себе элемент заголока
 `descElement: HTMLParagraphElement` - содержит в себе элемент описания
 `buttonElement: HTMLButtonElement` - сожержит в себе элемент кнопки (Купить)
-`priceElement: HTMLSpanElement` - содержит в себе ээлемент цены
 `hasInBusket : boolean` - отображает ниличие или отсутствие товара в корзине
 
 Методы класса:
@@ -268,7 +288,6 @@ Presenter - презентер содержит основную логику п
 `render()` - метод получения готового элемента корзины для отображения в модальном окне
 `set content(element: HTMLLIElement)` - добавление товаров в корзину
 `setCost(allPrice: number)` - установка общей стоимости товаров в корзине
-`clearBusket()` - очищение элементов товаров в коризне
 
 #### BusketListItem
 Является представлением товара в корзине
@@ -300,13 +319,10 @@ Presenter - презентер содержит основную логику п
 Поля класса:
 `form: HTMLFormElement` - сам лемент формы
 `errorElement: HTMLSpanElement` - элемент для отображения ошибок
-`nextButton?: HTMLButtonElement | null = null` - элемент кнопки "Далее"
+`nextButton: HTMLButtonElement` - элемент кнопки "Далее"/"Оформить заказ"
 
 Методы класса:
-`initList()` - инициализируем все слушатели событий
-`ensureButton()` - для переопределения кнопки в форме
-`validateFirst(data: Partial<Record<keyof IBuyer, string>>)` - валидация первой формы
-`validateSecond(data: Partial<Record<keyof IBuyer, string>>)` - валидация второй формы
+`initInputListener()` - инициализируем все слушатели событий всех input лементов в формах
 
 
 #### OrderForm
@@ -317,9 +333,12 @@ Presenter - презентер содержит основную логику п
 
 Поля класса:
 `element: HTMLFormElement` - элемент формы
+`orderButtons: HTMLButtonElement[]` - элементы кнопок выбора типа оплаты
 
 Методы класса:
 `render()` - метод для получения полного ээлемента формы
+`setErrorsFirst(data: Partial<Record<keyof IBuyer, string>>)` - установка ошибок на основе полученных данных после валидации
+`setPaymentButtons(choice: string)` - переключатель для кнопок выбора типа оплаты
 
 #### ContactsForm
 Представление формы для ввода телефона и почты
@@ -332,6 +351,7 @@ Presenter - презентер содержит основную логику п
 
 Методы класса:
 `render()` - метод для получения полного ээлемента формы
+`setErrorsSecond(data: Partial<Record<keyof IBuyer, string>>)` - установка ошибок на основе полученных данных после валидации
 
 #### Success
 Представление для отобржения успешного оформления заказа

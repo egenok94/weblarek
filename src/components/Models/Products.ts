@@ -27,7 +27,7 @@ export class Products{
 
     setItem(id: string): void {
         this.selectedproduct = this.getItemById(id) ?? null;
-        this.events.emit("card:selected");
+        this.events.emit("card:open");
     }
 
     getDetailCard (): IProduct | null {

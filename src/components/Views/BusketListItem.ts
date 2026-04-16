@@ -1,12 +1,10 @@
-import { Component } from "../base/Component";
 import { ensureElement } from "../../utils/utils";
 import { IProduct } from "../../types";
 import { IEvents } from "../base/Events";
+import { CardALL } from "./CardAll";
 
-export class BusketListItem extends Component<HTMLLIElement>{
+export class BusketListItem extends CardALL{
     protected indexElement: HTMLSpanElement;
-    protected titleElement: HTMLSpanElement;
-    protected priceElement: HTMLSpanElement;
     protected buttonElement: HTMLButtonElement;
     protected element: HTMLLIElement;
     protected counter: string;
@@ -16,8 +14,6 @@ export class BusketListItem extends Component<HTMLLIElement>{
         this.element = rootcontainer;
         this.counter = index.toString();
         this.indexElement = ensureElement<HTMLSpanElement>('.basket__item-index', this.element);
-        this.titleElement = ensureElement<HTMLSpanElement>('.card__title', this.element);
-        this.priceElement = ensureElement<HTMLSpanElement>('.card__price', this.element);
         this.buttonElement = ensureElement<HTMLButtonElement>('.basket__item-delete', this.element);
         this.buttonElement.addEventListener('click', () => {
             this.events.emit('card:delete-from-busket', item);

@@ -14,7 +14,7 @@ import { Header } from "../components/Views/Header.ts";
 import { Modal } from "../components/Views/Modal";
 import { OrderForm } from "../components/Views/OrderForm";
 import { Success } from "../components/Views/Success.ts";
-import { IProduct } from "../types/index.ts";
+import { IProduct, TPayment } from "../types/index.ts";
 import { API_URL } from "../utils/constants";
 import { cloneTemplate } from "../utils/utils";
 
@@ -30,7 +30,7 @@ export class Presenter {
     protected contsctsForm: ContactsForm;
     protected events: EventEmitter;
     protected busketModal: BusketModal;
-    protected currentCardPreview: CardPreview | null = null;
+    protected currentCardPreview: CardPreview;
     protected successModal: Success;
     
 
@@ -47,6 +47,7 @@ export class Presenter {
         this.contsctsForm = new ContactsForm(this.events);
         this.busketModal = new BusketModal(cloneTemplate("#basket"), this.events);
         this.successModal = new Success(cloneTemplate("#success"), this.events, this.purchaseModel.getCost());
+        this.currentCardPreview = new CardPreview(cloneTemplate("#card-preview"), this.events);
     }
 
     init() {
@@ -58,7 +59,8 @@ export class Presenter {
 
     async loadData(){
         try {
-            this.productsModel.setItems(Array.from(await this.dataFromServer.getApiProducts().then(res => res.items)));
+            const fromServer = await this.dataFromServer.getApiProducts().then(res => res.items)
+            this.productsModel.setItems(Array.from(fromServer));
         }
         catch(err) {
             console.error("Не удалось загрузить каталог", err);
@@ -68,22 +70,20 @@ export class Presenter {
     initialization(){
         
         this.events.on("catalog:change", () => {
-                let allGalleryCard: HTMLElement[] = [];
-                this.productsModel.getItems().forEach(item => {
-                    const cardCatalog = new GalleryCrad(cloneTemplate("#card-catalog"), this.events, item);
-                    allGalleryCard.push(cardCatalog.render(item));
-                })
-                this.galleryList.catalog = allGalleryCard;
-            }
-        );
-
-        this.events.on("card:open", (item:IProduct) =>{
-            this.currentCardPreview = new CardPreview(cloneTemplate("#card-preview"), this.purchaseModel.checkProduct(item.id), this.events);
-            this.productsModel.setItem(item.id);
+            this.galleryList.catalog = this.productsModel.getItems().map(item => {
+                const cardCatalog = new GalleryCrad(cloneTemplate("#card-catalog"), this.events, item);
+                return cardCatalog.render(item);
+            });
         });
 
-        this.events.on("card:selected", () => {
+        this.events.on("card:open", () => {
             this.modal.content = this.currentCardPreview!.render(this.productsModel.getDetailCard()!);
+        });
+
+        this.events.on("card:selected", (item:IProduct) => {
+            this.productsModel.setItem(item.id);
+            this.currentCardPreview?.updateButton(this.purchaseModel.checkProduct(item.id));
+            
         })
 
         this.events.on("modal:open", () => {
@@ -92,7 +92,6 @@ export class Presenter {
 
         this.events.on("modal:close", () => {
             this.modal.closeModal();
-            this.currentCardPreview = null;
         });
 
         this.events.on("basket:open", () => {
@@ -114,15 +113,14 @@ export class Presenter {
 
         this.events.on("busket:change", () => {
             this.header.counter = this.purchaseModel.getCount();
-            this.busketModal.clearBusket();
+            this.busketModal.content = [];
             const busketItems = this.purchaseModel.getProducts();
-            busketItems.forEach(item =>{
+            this.busketModal.content = busketItems.map(item =>{
                 const busketListItem = new BusketListItem(cloneTemplate("#card-basket"), this.events, item, busketItems.indexOf(item)+1);
-                this.busketModal.content = busketListItem.render(item);
+                return busketListItem.render(item);
             })
-            if(this.currentCardPreview) {
-                this.currentCardPreview!.updateButton(this.purchaseModel.checkProduct(this.productsModel.getDetailCard()!.id));
-            }
+            
+            this.currentCardPreview!.updateButton(this.purchaseModel.checkProduct(this.productsModel.getDetailCard()!.id));
 
             this.busketModal.setCost(this.purchaseModel.getCost());
         })
@@ -130,27 +128,37 @@ export class Presenter {
 
         this.events.on("modal:firstform", () => {
             this.modal.content = this.orderForm.render();
-            this.orderForm.ensureButton();
         })
 
-        this.events.on("buyer:change", (data : {name:string, value: string}) => {
-            const methodName = `set${data.name.charAt(0).toUpperCase() + data.name.slice(1)}`;
-            (this.buyerModel as any)[methodName](data.value);
+        this.events.on("buyer:change", (data : {name:string, value: TPayment}) => {
+                if (data.name === "payment") {
+                    this.buyerModel.setPayment(data.value);
+                }
+                if (data.name === "address") {
+                    this.buyerModel.setAddress(data.value);
+                }
+                if (data.name === "email") {
+                    this.buyerModel.setEmail(data.value);
+                }
+                if (data.name === "phone") {
+                    this.buyerModel.setPhone(data.value);
+                }
         })
 
         this.events.on("buyer:setValueFirst",() => {
-            this.orderForm.validateFirst(this.buyerModel.checkValidation());
+            this.orderForm.setErrorsFirst(this.buyerModel.checkValidation());
+            const buyer = this.buyerModel.getBuyer();
+            this.orderForm.setPaymentButtons(buyer["payment"]);
             
         })
 
         this.events.on("buyer:setValueSecond",() => {
-            this.contsctsForm.validateSecond(this.buyerModel.checkValidation());
+            this.contsctsForm.setErrorsSecond(this.buyerModel.checkValidation());
             
         })
 
         this.events.on("modal:secondform", () =>{
             this.modal.content = this.contsctsForm.render();
-            this.contsctsForm.ensureButton();
         })
 
         this.events.on("modal:success", async () => {
@@ -164,9 +172,9 @@ export class Presenter {
                 phone: buyer["phone"]
             }
             try {
-                this.successModal.setCost(this.purchaseModel.getCost());
+                const senData = await this.dataFromServer.sendData(order);
+                this.successModal.setCost(senData.total);
                 this.modal.content = this.successModal.render();
-                console.log(await this.dataFromServer.sendData(order));
                 this.purchaseModel.clearPurchase();
                 this.buyerModel.clearBuyer();
             } catch(err) {

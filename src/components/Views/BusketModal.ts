@@ -25,15 +25,14 @@ export class BusketModal extends Component<HTMLDivElement>{
         return this.element;
     }
 
-    set content(element: HTMLLIElement) {
-        this.listElement.appendChild(element);
+    set content(elements: HTMLLIElement[]) {
+        this.listElement.innerHTML = "";
+        elements.forEach(el => {
+            this.listElement.appendChild(el);
+        })
    }
    setCost(allPrice: number) {
     this.priceElement.textContent = allPrice.toString() + " синапсов";
     this.buttonElement.disabled = allPrice === 0 ? true : false;
-   }
-
-   clearBusket() {
-    this.listElement.replaceChildren();
    }
 }
