@@ -15,7 +15,6 @@ export class Success extends Component<HTMLDivElement>{
         this.setCost(allPrice);
         this.buttonElement = ensureElement<HTMLButtonElement>('.order-success__close', this.element);
         this.buttonElement.addEventListener('click', () => {
-            console.log("click on button");
             this.events.emit("modal:close");
         });
 
@@ -23,7 +22,6 @@ export class Success extends Component<HTMLDivElement>{
     }
 
     render() {
-        // this.price = price.toString();
         this.descElement.textContent = "Списано " + this.price + " синапсов";
         return this.element;
     }

@@ -44,6 +44,7 @@ export class Buyer{
         this.address = "";
         this.phone = "";
         this.email = "";
+        this.events.emit("forms:clear");
     }
 
     checkValidation(): Partial<Record<keyof IBuyer, string>> {

@@ -14,12 +14,16 @@ export class OrderForm extends Form {
         this.element = orderForm;
 
         this.orderButtons = ensureAllElements<HTMLButtonElement>(".button_alt", this.form);
-
         this.orderButtons.forEach(button => {
             button.addEventListener('click', () => {
-                this.events.emit("buyer:change", {name: "payment", value: button.name});
+                this.events.emit("buyer:form:changed", {name: "payment", value: button.name});
             })
         })
+
+        this.nextButton!.onclick = (e) => {
+            e.preventDefault();
+            this.events.emit("modal:secondform");
+        }
     }
 
     render() {
@@ -27,29 +31,28 @@ export class OrderForm extends Form {
     }
 
     setErrorsFirst(data: Partial<Record<keyof IBuyer, string>>){
-            if (data.payment !== ""){
-                this.errorElement.textContent = data.payment!;
-            }
-            if (data.payment == "" && data.address !== "") {
-                this.errorElement.textContent = data.address!;
-            }
-            if (data.payment == "" && data.address == "") {
-                this.errorElement.textContent = "";
-                this.nextButton!.disabled = false;
-                this.nextButton!.onclick = (e) => {
-                    e.preventDefault();
-                    this.events.emit("modal:secondform");
-                }
-            }
+            const errorMessage = [data.payment, data.address].filter(Boolean).join(', ');
+            this.nextButton.disabled = errorMessage.length !== 0
+            this.errorElement.textContent = errorMessage;
         }
 
-        setPaymentButtons(choice: string) {
-            this.orderButtons.forEach(btn => {
-                if(btn.name === choice) {
-                    btn.classList.toggle("button_alt-active");
-                } else {
-                    btn.classList.remove("button_alt-active");
-                }
-            })
-        }
+    setFields(payment: string, address: string) {
+        this.orderButtons.forEach(btn => {
+            btn.classList.toggle("button_alt-active", btn.name === payment);
+        })
+
+        this.allInputs.forEach(input => {
+            if (input.name == "address"){
+                input.value = address;
+            }
+        })
+    }
+
+    clearFields() {
+        this.orderButtons.forEach(btn => {
+            btn.classList.remove("button_alt-active");
+        })
+        this.nextButton.disabled = true;
+        this.clearInputs();
+    }
 }

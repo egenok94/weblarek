@@ -1,22 +1,22 @@
-import { Api } from "../components/base/Api";
-import { EventEmitter } from "../components/base/Events";
-import { DataFromAPI } from "../components/DataFromAPI.ts";
-import { Buyer } from "../components/Models/Buyer";
-import { Products } from "../components/Models/Products";
-import { Purchase } from "../components/Models/Purchase";
-import { BusketListItem } from "../components/Views/BusketListItem.ts";
-import { BusketModal } from "../components/Views/BusketModal.ts";
-import { CardPreview } from "../components/Views/CardPreview.ts";
-import { ContactsForm } from "../components/Views/ContactsForm.ts";
-import { GalleryCrad } from "../components/Views/GalleryCard";
-import { GalleryList } from "../components/Views/GalleryList";
-import { Header } from "../components/Views/Header.ts";
-import { Modal } from "../components/Views/Modal";
-import { OrderForm } from "../components/Views/OrderForm";
-import { Success } from "../components/Views/Success.ts";
-import { IProduct, TPayment } from "../types/index.ts";
-import { API_URL } from "../utils/constants";
-import { cloneTemplate } from "../utils/utils";
+import { Api } from "../base/Api.ts";
+import { EventEmitter } from "../base/Events.ts";
+import { DataFromAPI } from "../DataFromAPI.ts";
+import { Buyer } from "../Models/Buyer.ts";
+import { Products } from "../Models/Products.ts";
+import { Purchase } from "../Models/Purchase.ts";
+import { BusketListItem } from "../Views/BusketListItem.ts";
+import { BusketModal } from "../Views/BusketModal.ts";
+import { CardPreview } from "../Views/CardPreview.ts";
+import { ContactsForm } from "../Views/ContactsForm.ts";
+import { GalleryCrad } from "../Views/GalleryCard.ts";
+import { GalleryList } from "../Views/GalleryList.ts";
+import { Header } from "../Views/Header.ts";
+import { Modal } from "../Views/Modal.ts";
+import { OrderForm } from "../Views/OrderForm.ts";
+import { Success } from "../Views/Success.ts";
+import { IBuyer, IProduct, TPayment } from "../../types/index.ts";
+import { API_URL } from "../../utils/constants.ts";
+import { cloneTemplate } from "../../utils/utils.ts";
 
 export class Presenter {
     protected productsModel: Products;
@@ -53,8 +53,6 @@ export class Presenter {
     init() {
         this.loadData();
         this.initialization();
-        
-        
     }
 
     async loadData(){
@@ -130,7 +128,7 @@ export class Presenter {
             this.modal.content = this.orderForm.render();
         })
 
-        this.events.on("buyer:change", (data : {name:string, value: TPayment}) => {
+        this.events.on("buyer:form:changed", (data : {name:string, value: TPayment}) => {
                 if (data.name === "payment") {
                     this.buyerModel.setPayment(data.value);
                 }
@@ -147,13 +145,17 @@ export class Presenter {
 
         this.events.on("buyer:setValueFirst",() => {
             this.orderForm.setErrorsFirst(this.buyerModel.checkValidation());
-            const buyer = this.buyerModel.getBuyer();
-            this.orderForm.setPaymentButtons(buyer["payment"]);
+
+            const buyer  = this.buyerModel.getBuyer();
+            this.orderForm.setFields(buyer["payment"], buyer["address"]);
             
         })
 
         this.events.on("buyer:setValueSecond",() => {
             this.contsctsForm.setErrorsSecond(this.buyerModel.checkValidation());
+
+            const buyer  = this.buyerModel.getBuyer();
+            this.contsctsForm.setFields(buyer["email"], buyer["phone"]);
             
         })
 
@@ -177,10 +179,16 @@ export class Presenter {
                 this.modal.content = this.successModal.render();
                 this.purchaseModel.clearPurchase();
                 this.buyerModel.clearBuyer();
+                
             } catch(err) {
                 console.error("Не удалось отправить данные, попробуйте ещё раз", err);
             }
             
+        })
+
+        this.events.on("forms:clear", () =>{
+            this.orderForm.clearFields();
+            this.contsctsForm.clearFields();
         })
         
         

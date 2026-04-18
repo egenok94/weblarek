@@ -1,5 +1,5 @@
 import './scss/styles.scss';
-import { Presenter } from './Presenter/Presenter';
+import { Presenter } from './components/Presenter/Presenter';
 
 
 const presenter = new Presenter();

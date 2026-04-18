@@ -1,5 +1,5 @@
 import { IBuyer } from "../../types";
-import { cloneTemplate, ensureElement } from "../../utils/utils";
+import { cloneTemplate } from "../../utils/utils";
 import { IEvents } from "../base/Events";
 import { Form } from "./Form";
 
@@ -11,6 +11,10 @@ export class ContactsForm extends Form {
         const orderForm = cloneTemplate<HTMLFormElement>("#contacts");
         super(events, orderForm);
         this.element = orderForm;
+        this.nextButton!.onclick = (e) => {
+            e.preventDefault();
+            this.events.emit("modal:success");
+        }
     }
 
     render() {
@@ -18,19 +22,23 @@ export class ContactsForm extends Form {
     }
 
     setErrorsSecond(data: Partial<Record<keyof IBuyer, string>>){
-        if(data.email !== "") {
-            this.errorElement.textContent = data.email!;
-        }
-        if(data.email == "" && data.phone !== ""){
-            this.errorElement.textContent = data.phone!;
-        }
-        if(data.email == "" && data.phone == ""){
-            this.errorElement.textContent = "";
-            this.nextButton!.disabled = false;
-            this.nextButton!.onclick = (e) => {
-                e.preventDefault();
-                this.events.emit("modal:success");
+        const errorMessage = [data.email, data.phone].filter(Boolean).join(', ');
+        this.nextButton.disabled = errorMessage.length !== 0
+        this.errorElement.textContent = errorMessage;
+    }
+
+    setFields(email: string, phone: string){
+        this.allInputs.forEach(input => {
+            if (input.name == "email"){
+                input.value = email;
+            } 
+            if (input.name == "phone"){
+                input.value = phone;
             }
-        }  
+        })
+    }
+    
+    clearFields() {
+        this.clearInputs();
     }
 }
